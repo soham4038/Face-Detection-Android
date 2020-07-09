@@ -1,6 +1,7 @@
-# CameraXbasic
+# FaceDetection using Camerax and MLKit
 
-CameraXbasic aims to demonstrate how to use CameraX APIs written in Kotlin.
+Uses CameraX APIs and MLKit to detect faces.
+Uses cameraFragment of CameraX sample code with MLKit
 
 ## Build
 
