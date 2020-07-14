@@ -1,0 +1,117 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="30dp"
+    tools:context="com.android.MLvision.CameraXFaceDetect.fragments.SettingsFragment">
+
+
+    <Switch
+        android:id="@+id/contour"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:gravity="left"
+        android:text="Contour Detection"
+        android:textSize="24sp"
+        tools:layout_below="@id/toolbar" />
+
+    <Switch
+        android:id="@+id/landmark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/contour"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="15dp"
+        android:gravity="left"
+        android:text="Landmark Detection"
+        android:textSize="24sp" />
+
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/landmark"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="15dp"
+        android:gravity="center|left"
+        android:text="Performance Mode"
+        android:textAppearance="@android:style/TextAppearance.Material"
+        android:textSize="24sp" />
+
+    <ToggleButton
+        android:id="@+id/toggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="40sp"
+        android:layout_alignBaseline="@id/textView"
+        android:layout_alignRight="@id/textView"
+        android:text="ToggleButton"
+        android:textOff="FAST"
+        android:textOn="ACCURATE"
+        android:textSize="14sp" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/transparent"
+        android:backgroundTint="@android:color/transparent"
+        android:minHeight="?android:attr/actionBarSize"
+        android:theme="@android:style/Theme.Holo" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/toolbar"
+        android:layout_alignBottom="@id/toolbar"
+        android:layout_marginLeft="10dp"
+        android:backgroundTint="@android:color/transparent"
+        android:clickable="true"
+        android:elevation="0dp"
+        android:src="@drawable/ic_arrow_back_48px"
+        android:tint="@android:color/transparent"
+        app:backgroundTint="@android:color/transparent"
+        app:elevation="0dp"
+        app:rippleColor="@android:color/transparent" />
+
+    <Switch
+        android:id="@+id/classification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="15dp"
+        android:text="Classification"
+        android:textSize="24sp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/info"
+        style="@style/AppTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/toolbar"
+        android:layout_alignEnd="@id/toolbar"
+        android:layout_alignRight="@id/toolbar"
+        android:layout_alignBottom="@id/toolbar"
+        android:layout_marginLeft="10dp"
+        android:backgroundTint="@android:color/transparent"
+        android:clickable="true"
+        android:elevation="0dp"
+        android:src="@drawable/ic_info_outline_48px"
+        android:tint="@android:color/transparent"
+        app:backgroundTint="@android:color/transparent"
+        app:elevation="0dp"
+        app:rippleColor="@android:color/transparent" />
+
+
+</RelativeLayout>

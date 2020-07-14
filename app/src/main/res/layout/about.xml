@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+
+    android:layout_gravity="center">
+
+    <TableRow
+        android:layout_gravity="center"
+        android:paddingStart="20dp"
+        android:paddingTop="20dp"
+        android:paddingEnd="0dp"
+        android:paddingBottom="30dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/face_detection_using_mlkit"
+            android:textSize="24sp" />
+
+    </TableRow>
+
+    <TableRow
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        tools:visibility="visible">
+
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="10sp"
+            android:text="@string/_2020_devloped_by_soham_seth"
+            android:textSize="14sp" />
+    </TableRow>
+</TableLayout>
