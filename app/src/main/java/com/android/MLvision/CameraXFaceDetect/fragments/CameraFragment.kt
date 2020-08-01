@@ -33,16 +33,16 @@ import androidx.camera.view.PreviewView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.activityViewModels
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.Navigation
 import com.android.MLvision.CameraXFaceDetect.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.Face
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetectorOptions
-import java.io.File
-import java.text.SimpleDateFormat
-import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import kotlin.math.abs
@@ -60,6 +60,7 @@ class CameraFragment : Fragment() {
     private lateinit var container: ConstraintLayout
     private lateinit var viewFinder: PreviewView
 
+    private val model: PreferenceModel by activityViewModels()
     private lateinit var broadcastManager: LocalBroadcastManager
     private var graphicOverlay: GraphicOverlay? = null
     private var displayId: Int = -1
@@ -104,12 +105,7 @@ class CameraFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-
-        // Shut down our background executor
         cameraExecutor.shutdown()
-
-        // Unregister the broadcast receivers and listeners
-
         displayManager.unregisterDisplayListener(displayListener)
     }
 
@@ -131,43 +127,26 @@ class CameraFragment : Fragment() {
 
         broadcastManager = LocalBroadcastManager.getInstance(view.context)
 
-
-        // Every time the orientation of device changes, update rotation for use cases
         displayManager.registerDisplayListener(displayListener, null)
 
-        // Wait for the views to be properly laid out
         viewFinder.post {
 
-            // Keep track of the display in which this view is attached
             displayId = viewFinder.display.displayId
-
-            // Build UI controls
             updateCameraUi()
-
-            // Set up the camera and its use cases
             setUpCamera()
         }
     }
 
-    /**
-     * Inflate camera controls and update the UI manually upon config changes to avoid removing
-     * and re-adding the view finder from the view hierarchy; this provides a seamless rotation
-     * transition on devices that support it.
-     *
-     * NOTE: The flag is supported starting in Android 8 but there still is a small flash on the
-     * screen for devices that run Android 9 or below.
-     */
+
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
 
-        // Redraw the camera UI controls
         updateCameraUi()
 
-        // Enable or disable switching between cameras
         updateCameraSwitchButton()
     }
 
-    /** Initialize CameraX, and prepare to bind the camera use cases  */
+
     private fun setUpCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
         cameraProviderFuture.addListener(Runnable {
@@ -185,7 +164,6 @@ class CameraFragment : Fragment() {
             // Enable or disable switching between cameras
             updateCameraSwitchButton()
 
-            // Build and bind the camera use cases
             bindCameraUseCases()
         }, ContextCompat.getMainExecutor(requireContext()))
     }
@@ -193,7 +171,7 @@ class CameraFragment : Fragment() {
     /** Declare and bind preview, capture and analysis use cases */
     private fun bindCameraUseCases() {
 
-        // Get screen metrics used to setup camera for full screen resolution
+
         val metrics = DisplayMetrics().also { viewFinder.display.getRealMetrics(it) }
         Log.d(TAG, "Screen metrics: ${metrics.widthPixels} x ${metrics.heightPixels}")
 
@@ -202,7 +180,7 @@ class CameraFragment : Fragment() {
 
         val rotation = viewFinder.display.rotation
 
-        // CameraProvider
+
         val cameraProvider = cameraProvider
                 ?: throw IllegalStateException("Camera initialization failed.")
 
@@ -220,26 +198,16 @@ class CameraFragment : Fragment() {
 
         // ImageAnalysis
         imageAnalyzer = ImageAnalysis.Builder()
-                // We request aspect ratio but no resolution
                 .setTargetAspectRatio(screenAspectRatio)
-                // Set initial target rotation, we will have to call this again if rotation changes
-                // during the lifecycle of this use case
                 .setTargetRotation(rotation)
                 .build()
-                // The analyzer can then be assigned to the instance
                 .also {
                     it.setAnalyzer(cameraExecutor, FacaAnalyzer { imageProxy: ImageProxy ->
 
-                        // Values returned from our analyzer are passed to the attached listener
-                        // We log image analysis results here - you should do something useful
-                        // instead!
-
                     })
                 }
-
         // Must unbind the use-cases before rebinding them
         cameraProvider.unbindAll()
-
         try {
             // A variable number of use-cases can be passed here -
             // camera provides access to CameraControl & CameraInfo
@@ -253,17 +221,7 @@ class CameraFragment : Fragment() {
         }
     }
 
-    /**
-     *  [androidx.camera.core.ImageAnalysisConfig] requires enum value of
-     *  [androidx.camera.core.AspectRatio]. Currently it has values of 4:3 & 16:9.
-     *
-     *  Detecting the most suitable ratio for dimensions provided in @params by counting absolute
-     *  of preview ratio to one of the provided values.
-     *
-     *  @param width - preview width
-     *  @param height - preview height
-     *  @return suitable aspect ratio
-     */
+
     private fun aspectRatio(width: Int, height: Int): Int {
         val previewRatio = max(width, height).toDouble() / min(width, height)
         if (abs(previewRatio - RATIO_4_3_VALUE) <= abs(previewRatio - RATIO_16_9_VALUE)) {
@@ -283,7 +241,13 @@ class CameraFragment : Fragment() {
         // Inflate a new view containing all UI for controlling the camera
         val controls = View.inflate(requireContext(), R.layout.camera_ui_container, container)
 
-
+        controls.findViewById<FloatingActionButton>(R.id.floatingActionButton3).let {
+            it.setOnClickListener {
+                val transaction: FragmentTransaction = requireFragmentManager().beginTransaction()
+                transaction.replace(R.id.fragment_container, SettingsFragment())
+                transaction.commit()
+            }
+        }
         // Setup for button used to switch cameras
         controls.findViewById<ImageButton>(R.id.camera_switch_button).let {
 
@@ -347,13 +311,14 @@ class CameraFragment : Fragment() {
             }
         }
 
-
         @SuppressLint("UnsafeExperimentalUsageError", "SyntheticAccessor")
         override fun analyze(imageProxy: ImageProxy) {
+
             val options = FaceDetectorOptions.Builder()
-                    .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
-                    .setContourMode(FaceDetectorOptions.CONTOUR_MODE_ALL)
-                    .setLandmarkMode(FaceDetectorOptions.LANDMARK_MODE_ALL)
+                    .setPerformanceMode(model.performance.value!!)
+                    .setContourMode(model.contour.value!!)
+                    .setLandmarkMode(model.landmark.value!!)
+                    .setClassificationMode(model.classification.value!!)
                     .enableTracking()
                     .build()
             val detector =
@@ -390,20 +355,12 @@ class CameraFragment : Fragment() {
                         }
             }
         }
-
-
     }
-
 
     companion object {
 
-        private const val TAG = "CameraXFaceDetection"
+        private const val TAG = "CamXFace"
         private const val RATIO_4_3_VALUE = 4.0 / 3.0
         private const val RATIO_16_9_VALUE = 16.0 / 9.0
-
-        /** Helper function used to create a timestamped file */
-        private fun createFile(baseFolder: File, format: String, extension: String) =
-                File(baseFolder, SimpleDateFormat(format, Locale.US)
-                        .format(System.currentTimeMillis()) + extension)
     }
 }

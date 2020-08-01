@@ -16,7 +16,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/face_detection_using_mlkit"
+            android:text="@string/face_detection_using_mlkit_by_google"
             android:textSize="24sp" />
 
     </TableRow>
@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:lineSpacingExtra="10sp"
-            android:text="@string/_2020_devloped_by_soham_seth"
-            android:textSize="14sp" />
+            android:text="@string/devloped_by_soham_seth"
+            android:textSize="10sp" />
     </TableRow>
 </TableLayout>

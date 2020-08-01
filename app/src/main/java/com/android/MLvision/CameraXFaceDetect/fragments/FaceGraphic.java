@@ -16,8 +16,8 @@ import java.util.List;
  */
 public class FaceGraphic extends GraphicOverlay.Graphic {
 
-    private static final float FACE_POSITION_RADIUS = 10.0f;
-    private static final float ID_TEXT_SIZE = 70.0f;
+    private static final float FACE_POSITION_RADIUS = 8.0f;
+    private static final float ID_TEXT_SIZE = 35.0f;
     private static final float ID_Y_OFFSET = 80.0f;
     private static final float ID_X_OFFSET = -70.0f;
     private static final float BOX_STROKE_WIDTH = 5.0f;
@@ -99,21 +99,22 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
             canvas.drawText(
                     "happiness: " + String.format("%.2f", face.getSmilingProbability()),
                     x + ID_X_OFFSET * 3,
-                    y - ID_Y_OFFSET,
+                    bottom - (bottom * 0.05f),
                     idPaint);
         }
 
         if (face.getRightEyeOpenProbability() != null) {
+            String str = "Right eye: " + String.format("%.2f", face.getRightEyeOpenProbability());
             canvas.drawText(
-                    "right eye: " + String.format("%.2f", face.getRightEyeOpenProbability()),
-                    x - ID_X_OFFSET,
+                    str,
+                    right - idPaint.measureText(str),
                     y,
                     idPaint);
         }
         if (face.getLeftEyeOpenProbability() != null) {
             canvas.drawText(
-                    "left eye: " + String.format("%.2f", face.getLeftEyeOpenProbability()),
-                    x + ID_X_OFFSET * 6,
+                    "Left eye: " + String.format("%.2f", face.getLeftEyeOpenProbability()),
+                    left,
                     y,
                     idPaint);
         }
